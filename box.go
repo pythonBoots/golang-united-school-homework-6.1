@@ -104,15 +104,19 @@ func (b *box) SumArea() float64 {
 // whether circles are not exist in the list, then returns an error
 func (b *box) RemoveAllCircles() error {
 	var countCircle int
+	var indexesArrayForDelete = []int{}
 	for index := 0; index < len(b.shapes); index++ {
 		switch b.shapes[index].(type) {
 		case *Circle:
-			b.shapes = append(b.shapes[:index], b.shapes[index+1:]...)
+			indexesArrayForDelete = append(indexesArrayForDelete, index)
 			countCircle += 1
 		}
 	}
 	if countCircle == 0 {
 		return errorNoCircle
+	}
+	for _, indexToDelete := range indexesArrayForDelete {
+		b.ExtractByIndex(indexToDelete)
 	}
 	return nil
 }
