@@ -10,6 +10,13 @@ type box struct {
 	shapesCapacity int // Maximum quantity of shapes that can be inside the box.
 }
 
+var (
+	errorOutOfRange = errors.New("Requested index is out of range")
+	errorBoxFull    = errors.New("The box is full")
+	errorNoIndex    = errors.New("There is no such index")
+	errorNoCircle   = errors.New("There is no circle in box")
+)
+
 // NewBox creates new instance of box
 func NewBox(shapesCapacity int) *box {
 	return &box{
@@ -23,7 +30,7 @@ func (b *box) AddShape(shape Shape) error {
 	if len(b.shapes) < b.shapesCapacity {
 		b.shapes = append(b.shapes, shape)
 	}
-	return errors.New("The box is full")
+	return errorBoxFull
 
 }
 
@@ -31,21 +38,21 @@ func (b *box) AddShape(shape Shape) error {
 // whether shape by index doesn't exist or index went out of the range, then it returns an error
 func (b *box) GetByIndex(i int) (Shape, error) {
 	if i > len(b.shapes) {
-		return nil, errors.New("Requested index is out of range")
+		return nil, errorOutOfRange
 	}
 	for index := 0; index < len(b.shapes); index++ {
 		if index == i {
 			return b.shapes[index], nil
 		}
 	}
-	return nil, errors.New("There is no such index")
+	return nil, errorNoIndex
 }
 
 // ExtractByIndex allows getting shape by index and removes this shape from the list.
 // whether shape by index doesn't exist or index went out of the range, then it returns an error
 func (b *box) ExtractByIndex(i int) (Shape, error) {
 	if i > len(b.shapes) {
-		return nil, errors.New("Requested index is out of range")
+		return nil, errorOutOfRange
 	}
 
 	for index := 0; index < len(b.shapes); index++ {
@@ -55,14 +62,14 @@ func (b *box) ExtractByIndex(i int) (Shape, error) {
 			return memo, nil
 		}
 	}
-	return nil, errors.New("There is no such index")
+	return nil, errorNoIndex
 }
 
 // ReplaceByIndex allows replacing shape by index and returns removed shape.
 // whether shape by index doesn't exist or index went out of the range, then it returns an error
 func (b *box) ReplaceByIndex(i int, shape Shape) (Shape, error) {
 	if i > len(b.shapes) {
-		return nil, errors.New("Requested index is out of range")
+		return nil, errorOutOfRange
 	}
 	for index := 0; index < len(b.shapes); index++ {
 		if index == i {
@@ -71,7 +78,7 @@ func (b *box) ReplaceByIndex(i int, shape Shape) (Shape, error) {
 			return memo, nil
 		}
 	}
-	return nil, errors.New("There is no such index")
+	return nil, errorNoIndex
 }
 
 // SumPerimeter provides sum perimeter of all shapes in the list.
@@ -105,7 +112,7 @@ func (b *box) RemoveAllCircles() error {
 		}
 	}
 	if countCircle == 0 {
-		return errors.New("There is no circles in box")
+		return errorNoCircle
 	}
 	return nil
 }
