@@ -116,7 +116,11 @@ func (b *box) RemoveAllCircles() error {
 		return errorNoCircle
 	}
 	for _, indexToDelete := range indexesArrayToDelete {
-		_, _ = b.ExtractByIndex(indexToDelete)
+		if indexToDelete == 0 {
+			b.ExtractByIndex(indexToDelete)
+		} else {
+			b.ExtractByIndex(indexToDelete - 1)
+		}
 	}
 	return nil
 }
